@@ -14,10 +14,11 @@
 ---
 
 <p align="center">
-  <img src="https://media.giphy.com/media/Ah3zHH7hvsSB2/giphy.gif" height="180px" />
   <!-- Or your own uploaded image:
-  <img src="YOUR_IMAGE_URL" height="180px" />
+  <img src="https://media.giphy.com/media/Ah3zHH7hvsSB2/giphy.gif" height="180px" />
   -->
+  
+  <img src="Photo/Mohammed-Khanbari.png" height="180px" />
 </p>
 
 ## 🚀 About Me
