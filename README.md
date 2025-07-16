@@ -2,7 +2,7 @@
 <h3 align="center">Versatile Full-Stack Developer | ASP.NET Core Specialist</h3>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=mohkhanbari&show_icons=true&theme=radical" alt="mohkhanbari" />
+  <img src="https://github-readme-stats.vercel.app/api?username=Mohammed-Khaled-Khanbari&show_icons=true&theme=radical" alt="mohkhanbari" />
 </p>
 
 ---
