@@ -25,9 +25,9 @@
 
 - 🏢 Full-Stack Developer at **Data Trans**
 - 🎓 IT Bachelor's Degree, **Sana’a University**
-- 🧑‍💻 Passionate about ASP.NET Core, C#, .NET MAUI, JavaScript, SQL, and scalable architectures.
+- 🧑‍💻 Passionate about ASP.NET Core, C#, .NET MAUI, React, JavaScript, TypeScript, SQL, and scalable architectures.
 - 🌱 Currently learning more about **Microservices, Clean Architecture, Blazor, and Cloud Technologies**
-- 💬 Ask me about **.NET, .NET MAUI, Clean Architecture, Microservices, REST APIs, C#, JS, SQL, PostgreSQL**
+- 💬 Ask me about **.NET, .NET MAUI, Clean Architecture, Microservices, REST APIs, C#, JS, React, GSAP, SQL, PostgreSQL**
 - 🏅 Computer Programming Diploma, Computer Driving License
 - 🗣️ Languages: **English** (Professional), **Arabic** (Native)
 
@@ -61,6 +61,8 @@
     <img width="30px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-plain.svg" title="Bootstrap" />
     <img width="30px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg" title="SASS" />
     <img width="30px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jquery/jquery-original.svg" title="jQuery" />
+    <img width="30px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" title="React" />
+    <img width="30px" src="https://cdn.worldvectorlogo.com/logos/gsap-greensock.svg" title="GSAP" />
   </kbd>
   <kbd>
     <kbd>Database</kbd>
