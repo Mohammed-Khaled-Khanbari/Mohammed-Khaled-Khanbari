@@ -51,9 +51,11 @@ async function fetchLive() {
         pullRequests { totalCount }
         issues { totalCount }
         repositoriesContributedTo(contributionTypes: [COMMIT, PULL_REQUEST, ISSUE]) { totalCount }
-        repositories(ownerAffiliations: OWNER, isFork: false, privacy: PUBLIC, first: 100) {
+        # Private repos are only visible with a PROFILE_TOKEN; the built-in token sees public ones.
+        repositories(ownerAffiliations: [OWNER, ORGANIZATION_MEMBER], isFork: false, first: 100) {
           totalCount
           nodes {
+            nameWithOwner owner { login }
             stargazerCount
             languages(first: 10, orderBy: { field: SIZE, direction: DESC }) {
               edges { size node { name } }
@@ -67,7 +69,7 @@ async function fetchLive() {
 
   // Contribution calendar, one year at a time, back to account creation.
   const days = [];
-  let commitsThisYear = 0;
+  let activeDaysThisYear = 0;
   let contributionsThisYear = 0;
   const now = new Date();
   const start = new Date(user.createdAt);
@@ -87,7 +89,7 @@ async function fetchLive() {
     );
     const cc = d.user.contributionsCollection;
     if (y === now.getUTCFullYear()) {
-      commitsThisYear = cc.totalCommitContributions + cc.restrictedContributionsCount;
+      activeDaysThisYear = cc.contributionCalendar.weeks.flatMap((w) => w.contributionDays).filter((x) => x.contributionCount > 0).length;
       contributionsThisYear = cc.contributionCalendar.totalContributions;
     }
     for (const w of cc.contributionCalendar.weeks)
@@ -97,7 +99,9 @@ async function fetchLive() {
   const langs = new Map();
   let stars = 0;
   for (const r of user.repositories.nodes) {
-    stars += r.stargazerCount;
+    // Skip this profile repo: its only code is the card generator.
+    if (r.nameWithOwner.toLowerCase() === `${LOGIN}/${LOGIN}`.toLowerCase()) continue;
+    if (r.owner.login.toLowerCase() === LOGIN.toLowerCase()) stars += r.stargazerCount;
     for (const e of r.languages.edges) langs.set(e.node.name, (langs.get(e.node.name) || 0) + e.size);
   }
 
@@ -109,7 +113,7 @@ async function fetchLive() {
     prs: user.pullRequests.totalCount,
     issues: user.issues.totalCount,
     contributedTo: user.repositoriesContributedTo.totalCount,
-    commitsThisYear,
+    activeDaysThisYear,
     contributionsThisYear,
     days,
     languages: [...langs].map(([name, size]) => ({ name, size })),
@@ -169,7 +173,7 @@ function overviewCard(d) {
   const { current, longest } = streaks(d.days);
   const tiles = [
     [fmt(d.contributionsThisYear), `Contributions in ${d.year}`],
-    [fmt(d.commitsThisYear), `Commits in ${d.year}`],
+    [fmt(d.activeDaysThisYear), `Active days in ${d.year}`],
     [fmt(d.prs), "Pull requests"],
     [fmt(d.stars), "Stars earned"],
   ];
@@ -226,7 +230,7 @@ function languagesCard(d) {
   </g>`;
   });
   if (!sorted.length)
-    body += `\n  <text x="28" y="130" class="sans" font-size="14" fill="${C.muted}">No public code yet.</text>`;
+    body += `\n  <text x="28" y="130" class="sans" font-size="14" fill="${C.muted}">No repositories visible yet.</text>\n  <text x="28" y="154" class="sans" font-size="12" fill="${C.muted}">Add a PROFILE_TOKEN secret to include private work.</text>`;
   return frame(W, H, body, `Most used languages: ${top.map((l) => l.name).join(", ")}`);
 }
 
