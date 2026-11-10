@@ -97,13 +97,16 @@ async function fetchLive() {
   }
 
   const langs = new Map();
-  let stars = 0;
+  let stars = 0, ownCount = 0, orgCount = 0;
   for (const r of user.repositories.nodes) {
     // Skip this profile repo: its only code is the card generator.
     if (r.nameWithOwner.toLowerCase() === `${LOGIN}/${LOGIN}`.toLowerCase()) continue;
-    if (r.owner.login.toLowerCase() === LOGIN.toLowerCase()) stars += r.stargazerCount;
+    if (r.owner.login.toLowerCase() === LOGIN.toLowerCase()) { stars += r.stargazerCount; ownCount++; } else orgCount++;
     for (const e of r.languages.edges) langs.set(e.node.name, (langs.get(e.node.name) || 0) + e.size);
   }
+
+  // Counts only, no names: this log is public on a public repo.
+  console.log(`Repos counted: ${ownCount} personal, ${orgCount} organization`);
 
   return {
     year: now.getUTCFullYear(),
