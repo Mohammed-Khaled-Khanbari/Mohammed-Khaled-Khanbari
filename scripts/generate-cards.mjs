@@ -51,17 +51,6 @@ async function fetchLive() {
         pullRequests { totalCount }
         issues { totalCount }
         repositoriesContributedTo(contributionTypes: [COMMIT, PULL_REQUEST, ISSUE]) { totalCount }
-        # Private repos are only visible with a PROFILE_TOKEN; the built-in token sees public ones.
-        repositories(ownerAffiliations: [OWNER, ORGANIZATION_MEMBER], isFork: false, first: 100) {
-          totalCount
-          nodes {
-            nameWithOwner owner { login }
-            stargazerCount
-            languages(first: 10, orderBy: { field: SIZE, direction: DESC }) {
-              edges { size node { name } }
-            }
-          }
-        }
       }
     }`,
     { login: LOGIN }
@@ -96,22 +85,53 @@ async function fetchLive() {
       for (const day of w.contributionDays) days.push({ date: day.date, count: day.contributionCount });
   }
 
+  // All non-fork repos you own, reach through an organization, or collaborate on.
+  // Private ones are only visible with a PROFILE_TOKEN; the built-in token sees public ones.
+  const repos = [];
+  let cursor = null, reported = 0;
+  do {
+    const page = await gql(
+      `query($login: String!, $after: String) {
+        user(login: $login) {
+          repositories(ownerAffiliations: [OWNER, ORGANIZATION_MEMBER, COLLABORATOR], isFork: false, first: 100, after: $after) {
+            totalCount
+            pageInfo { hasNextPage endCursor }
+            nodes {
+              nameWithOwner owner { login }
+              stargazerCount
+              languages(first: 10, orderBy: { field: SIZE, direction: DESC }) {
+                edges { size node { name } }
+              }
+            }
+          }
+        }
+      }`,
+      { login: LOGIN, after: cursor }
+    );
+    const conn = page.user.repositories;
+    reported = conn.totalCount;
+    repos.push(...conn.nodes);
+    cursor = conn.pageInfo.hasNextPage ? conn.pageInfo.endCursor : null;
+  } while (cursor);
+
   const langs = new Map();
+  const otherOwners = new Set();
   let stars = 0, ownCount = 0, orgCount = 0;
-  for (const r of user.repositories.nodes) {
+  for (const r of repos) {
     // Skip this profile repo: its only code is the card generator.
     if (r.nameWithOwner.toLowerCase() === `${LOGIN}/${LOGIN}`.toLowerCase()) continue;
-    if (r.owner.login.toLowerCase() === LOGIN.toLowerCase()) { stars += r.stargazerCount; ownCount++; } else orgCount++;
+    if (r.owner.login.toLowerCase() === LOGIN.toLowerCase()) { stars += r.stargazerCount; ownCount++; } else { orgCount++; otherOwners.add(r.owner.login); }
     for (const e of r.languages.edges) langs.set(e.node.name, (langs.get(e.node.name) || 0) + e.size);
   }
 
   // Counts only, no names: this log is public on a public repo.
-  console.log(`Repos counted: ${ownCount} personal, ${orgCount} organization`);
+  console.log(`Repos visible to the token: ${reported}`);
+  console.log(`Repos counted: ${ownCount} personal, ${orgCount} from ${otherOwners.size} other owner(s)`);
 
   return {
     year: now.getUTCFullYear(),
     followers: user.followers.totalCount,
-    publicRepos: user.repositories.totalCount,
+    publicRepos: ownCount,
     stars,
     prs: user.pullRequests.totalCount,
     issues: user.issues.totalCount,
