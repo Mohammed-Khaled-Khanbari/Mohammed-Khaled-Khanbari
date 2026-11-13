@@ -15,7 +15,7 @@
   <rect x="28" y="31" width="8" height="8" rx="2" fill="#EB5E34"/>
   <text x="46" y="40" class="mono" font-size="12" letter-spacing="2.4" fill="#D9A56B">LANGUAGES</text>
   <clipPath id="bar"><rect x="28" y="62" width="464" height="12" rx="6"/></clipPath>
-  <g clip-path="url(#bar)" class="grow"><rect x="28.00" y="62" width="330.89" height="12" fill="#EB5E34"/><rect x="358.39" y="62" width="48.42" height="12" fill="#F2895F"/><rect x="406.31" y="62" width="39.32" height="12" fill="#D9A56B"/><rect x="445.13" y="62" width="27.32" height="12" fill="#B9774A"/><rect x="471.95" y="62" width="13.38" height="12" fill="#8E5B3E"/><rect x="484.83" y="62" width="7.67" height="12" fill="#6A4636"/></g>
+  <g clip-path="url(#bar)" class="grow"><rect x="28.00" y="62" width="330.90" height="12" fill="#EB5E34"/><rect x="358.40" y="62" width="48.41" height="12" fill="#F2895F"/><rect x="406.32" y="62" width="39.32" height="12" fill="#D9A56B"/><rect x="445.13" y="62" width="27.32" height="12" fill="#B9774A"/><rect x="471.95" y="62" width="13.38" height="12" fill="#8E5B3E"/><rect x="484.83" y="62" width="7.67" height="12" fill="#6A4636"/></g>
   <g class="fade" style="animation-delay:0.2s">
     <circle cx="34" cy="107" r="6" fill="#EB5E34"/>
     <text x="50" y="112" class="sans" font-size="15" fill="#FBEFE3">C#</text>
